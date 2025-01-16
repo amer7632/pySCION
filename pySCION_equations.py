@@ -544,10 +544,9 @@ def pySCION_equations(t, y, pars, forcings, sensanal, tuning, interpstack, lipst
     co2ppm_present_day = 280
 
     if stepnumber.step == 1:
-        # get present-day ocean arc weathering
-        CW_ocean_arc_present = forcings.ocean_arc_INTERP(0)
+        
         pars.get_cw_present(co2ppm_present_day, interpstack, lipstack, k_erosion,
-                             Xm, K, kw, Ea, z, sigplus1, T0, R,grid_area_km2, CW_ocean_arc_present)
+                             Xm, K, kw, Ea, z, sigplus1, T0, R,grid_area_km2)
         
     # cw total
     cw_past = cw_per_km2_past*grid_area_km2
@@ -557,11 +556,7 @@ def pySCION_equations(t, y, pars, forcings, sensanal, tuning, interpstack, lipst
     cw_future[np.isnan(cw_future)==1] = 0
     cw_sum_past = np.sum(cw_past)
     cw_sum_future = np.sum(cw_future)
-    # Contribution from ocean arcs
-    # it's static and not dynamic, so we can just add it in
-    CW_ocean_arcs = forcings.ocean_arc_INTERP(new_data_dict['t_geol'])
-    
-    cw_tot = cw_sum_past*contribution_past + cw_sum_future*contribution_future + CW_ocean_arcs
+    cw_tot = cw_sum_past*contribution_past + cw_sum_future*contribution_future
 
     # Carbonate weathering spatial approximation, linear with runoff
     if pars.pgeog_test == 1:
