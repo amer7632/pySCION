@@ -21,7 +21,7 @@ def intersect_mtlb(a, b):
     c = aux[:-1][aux[1:] == aux[:-1]]
     return c, ia[np.isin(a1, c)], ib[np.isin(b1, c)]
 
-def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
+def pySCION_initialise(runcontrol, ocean_arc_weathering, tuning_start_vals= np.asarray([])):
     start_time = time.time()
 
     ######################################################################
@@ -79,8 +79,8 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
     palaeogeog_test = 0
     degassing_test = 0
     bio_test = 0
-    lip_weathering_test = 0
-    lip_degass_test = 0
+    lip_weathering_test = 1
+    lip_degass_test = 1
     
     # to do:
     # integrate this more systematically to make it less dangerous
@@ -306,6 +306,9 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
     file_to_open_LIP_DEGASSING = './forcings/CR_force_LIP_table_simple.csv'
     forcings_dict['lip_degassing'] = pd.read_csv(file_to_open_LIP_DEGASSING)
 
+    #ocean arc weathering?
+    forcings_dict['ocean_arc_weathering'] = ocean_arc_weathering
+    
     # Make forcings class here
     forcings = pySCION_classes.Forcings_class(forcings_dict)
     # get interpolations

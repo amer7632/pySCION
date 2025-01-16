@@ -106,7 +106,7 @@ class Variable_parameters_class(object):
         self.lip_degass_test = var_dict['lip_degass_test']
 
     def get_cw_present(self, co2ppm_present_day, interpstack, lipstack, k_erosion, Xm, K,
-                        kw, Ea, z, sigplus1, T0, R, grid_area_km2):
+                        kw, Ea, z, sigplus1, T0, R, grid_area_km2, CW_ocean_arc_present):
         #### get present day co2
         key_upper_co2_present = np.min(interpstack.co2[(interpstack.co2 - co2ppm_present_day) >= 0])
         key_lower_co2_present = np.max(interpstack.co2[(interpstack.co2 - co2ppm_present_day) <= 0])
@@ -201,7 +201,8 @@ class Variable_parameters_class(object):
         cw_present = cw_per_km2_present * grid_area_km2
         cw_present[np.isnan(cw_present)==1] = 0
 
-        self.cw_present = sum(sum(cw_present)) #4.5e8 for palaeogeog=1
+        #add present-day ocean arcs, it's 'static' so can just sum separately
+        self.cw_present = sum(sum(cw_present)) + CW_ocean_arc_present#4.5e8 for palaeogeog=1
 
     def __bool__ (self):
         return bool(self.telltime)
@@ -915,6 +916,11 @@ class Forcings_class(object):
         self.D_lip_durations = forcings_dict['lip_degassing']['duration_Ma'].values
         self.D_lip_fluxes = forcings_dict['lip_degassing']['mol_C_per_a'].values
 
+        #ocean arc weathering
+        self.ocean_arc = forcings_dict['ocean_arc_weathering']
+        self.ocean_arc_time = np.arange(0,-610,-10)
+
+
     def get_interp_forcings(self):
         '''
           Make interpolations of these forcings
@@ -929,7 +935,8 @@ class Forcings_class(object):
         self.shoreline_INTERP = interp1d(self.shoreline_time, self.shoreline_relative)
         self.f_biot_INTERP = interp1d([-1000e6, -525e6, -520e6, 0],[0, 0, 1, 1])
         self.cb_INTERP = interp1d([0, 1], [1.2, 1])       
-
+        #print(len(self.ocean_arc_time), len(self.ocean_arc))
+        self.ocean_arc_INTERP = interp1d(self.ocean_arc_time, self.ocean_arc)
     def __bool__ (self):
         return bool(self.telltime)
 
