@@ -102,8 +102,8 @@ class Variable_parameters_class(object):
         self.arc_test = var_dict['arc_test']
         self.degass_test = var_dict['degassing_test']
         self.bio_test = var_dict['biology_test']
-        self.lip_test = var_dict['lip_test']
-        self.lip_degass = var_dict['lip_degass']
+        self.lip_weathering_test = var_dict['lip_weathering_test']
+        self.lip_degass_test = var_dict['lip_degass_test']
 
     def get_cw_present(self, co2ppm_present_day, interpstack, lipstack, k_erosion, Xm, K,
                         kw, Ea, z, sigplus1, T0, R, grid_area_km2):

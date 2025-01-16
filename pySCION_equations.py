@@ -56,7 +56,7 @@ def pySCION_equations(t, y, pars, forcings, sensanal, tuning, interpstack, lipst
     # other is to have all lips included
     # if all lips are included it overwrites teh siberian traps calculation
 
-    if pars.lip_degass == 0:
+    if pars.lip_degass_test == 0:
         lip_degass = 0
         for ind, lip_age in enumerate(forcings.D_lip_ages):
             tmp_mid_time = forcings.D_lip_ages[ind] + forcings.D_lip_durations[ind]/2

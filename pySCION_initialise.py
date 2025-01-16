@@ -23,6 +23,7 @@ def intersect_mtlb(a, b):
 
 def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
     start_time = time.time()
+
     ######################################################################
     #################   Check for sensitivity analysis   #################
     ######################################################################
@@ -41,13 +42,32 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
         tuning = pySCION_classes.Tuning_class(tuning_key = 1)
         plotrun = pySCION_classes.Plotrun_class(plotrun_key = 0)
         telltime = 0
-    else:
+    elif runcontrol == -1:
         # For other runs
         sensanal = pySCION_classes.Sensanal_class(sensanal_key = 0)
         tuning = pySCION_classes.Tuning_class(tuning_key = 0)
         plotrun = pySCION_classes.Plotrun_class(plotrun_key = 1)
         telltime = 1
+    elif runcontrol == -2:
+        # For other runs
+        print('Worldgraphic plots, takes awhile at the end')
+        sensanal = pySCION_classes.Sensanal_class(sensanal_key = 0)
+        tuning = pySCION_classes.Tuning_class(tuning_key = 0)
+        plotrun = pySCION_classes.Plotrun_class(plotrun_key = 1)
+        telltime = 1
 
+    else:
+        print('Runcontrol not set properly:'
+                    '\n'
+                    '-2, one run and world plots'
+                    '\n'
+                    '-1, one run and flux plots (default)'
+                    '\n'
+                    '0 for tuning (use tuning notebook)'
+                    '\n'
+                    '1 sensitivity analysis, no plots')
+
+        return
 
     # Set flags for testing drivers
     # 0 = default, driver is on
@@ -59,8 +79,8 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
     palaeogeog_test = 0
     degassing_test = 0
     bio_test = 0
-    lip_weathering = 1
-    lip_degass = 1
+    lip_weathering_test = 0
+    lip_degass_test = 0
     
     # to do:
     # integrate this more systematically to make it less dangerous
@@ -71,9 +91,9 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
         else:
             print('Arc weathering is turned ON!')
         if suture_test == 1:
-            print('Sutures weathering is turned OFF')
+            print('Suture weathering is turned OFF')
         else:
-            print('Sutures weathering is turned ON!')
+            print('Suture weathering is turned ON!')
         if degassing_test == 1:
             print('Degassing is turned OFF!')
         else:
@@ -86,11 +106,11 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
             print('Plant forcings are turned OFF!')
         else:
             print('Plant forcings are turned ON!')
-        if lip_weathering == 1:
+        if lip_weathering_test == 1:
             print('LIP weathering is turned OFF!')
         else:
             print('LIP weathering is turned ON!')
-        if lip_degass == 1:
+        if lip_degass_test == 1:
             print('LIP degassing is turned OFF!')
         else:
             print('LIP degassing is turned ON!')            
@@ -112,8 +132,8 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
     var_dict['arc_test'] = arc_test
     var_dict['degassing_test'] = degassing_test
     var_dict['biology_test'] = bio_test
-    var_dict['lip_test'] = lip_weathering
-    var_dict['lip_degass'] = lip_degass
+    var_dict['lip_weathering_test'] = lip_weathering_test
+    var_dict['lip_degass_test'] = lip_degass_test
 
     # reductant input
     var_dict['k_reductant_input'] = 0.4e12 ### schopf and klein 1992
@@ -196,7 +216,7 @@ def pySCION_initialise(runcontrol, tuning_start_vals= np.asarray([])):
         var_dict['relict_arc_factor'] = 1
     if suture_test == 1:
         var_dict['suture_factor'] = 1
-    if lip_weathering == 1:
+    if lip_weathering_test == 1:
         var_dict['lip_factor'] = 1
 
     # Finished loading params
